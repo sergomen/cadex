@@ -64,6 +64,28 @@ const Torus = ({ position, color, size }) => {
   );
 };
 
+const TorusKnot = ({ position, color, size }) => {
+  const ref = useRef<THREE.Mesh>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
+
+  useFrame((state, delta) => {
+    const speed = isHovered ? 1 : 0.2;
+    if (ref.current) {
+      ref.current.rotation.x += delta;
+      ref.current.rotation.y += delta * speed;
+      ref.current.position.z = Math.sin(state.clock.elapsedTime) * 2;
+    }
+  });
+
+  return (
+    <mesh position={position} ref={ref}>
+      <torusKnotGeometry args={size} />
+      <meshStandardMaterial color={color} />
+    </mesh>
+  );
+};
+
 
 
 const App = () => {
@@ -76,6 +98,7 @@ const App = () => {
       </group>
       <Sphere position={[0, 0, 0]} size={[1, 30, 30]} color={"orange"} />
       <Torus position={[2, 0, 0]} size={[0.5, 0.1, 30, 30]} color={"blue"} />
+      <TorusKnot position={[-2, 0, 0]} size={[0.5, 0.1, 30, 30]} color={"hotpink"} />
     </Canvas>
   );
 };
